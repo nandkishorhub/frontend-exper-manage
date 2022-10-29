@@ -91,6 +91,15 @@ body {
   line-height: 1.5;
 }
 
+p:not([class]) {
+  opacity: 0.7;
+  max-width: 35ch;
+}
+
+p[data-width="wide"] {
+  max-width: 40ch;
+}
+
 /* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
@@ -238,6 +247,32 @@ select {
   gap: 1rem;
 }
 
+/*  we can only justify self on element if it is grid item . this is
+not possible if it is flex item */
+.justify-self-end {
+  justify-self: end;
+}
+
+.vertical-align-center {
+  align-items: center;
+}
+
+@media (min-width: 50em) {
+  .justify-self-end-md {
+    justify-self: end;
+  }
+}
+
+/*  Style will apply to all siblings except first */
+/* Add :where class to lower the specificity so that we can overwrite styling if
+needed */
+:where(.flow :not(:first-child)) {
+  /* here if variable  --flow-spacer  defined it will get applied else 1em
+  so it gives customizable option here, we can overwrite the same using that
+  variable so it is very handy*/
+  margin-top: var(--flow-spacer, 2em);
+}
+
 /* we are using em here as this is the only unit which consistant across all browser
 when zomming in and out screen 
 Note: em or rem set for media query not looking at root size rather it relative to browser size
@@ -263,6 +298,7 @@ body {
 }
 
 .button {
+  display: inline-flex;
   cursor: pointer;
   border: 0;
   text-decoration: none;
@@ -291,6 +327,117 @@ body {
   background-color: var(--clr-accent-300);
 }
 
-.mobile-nav-toggle .icon-close {
+/* navigation  */
+
+.primary-header {
+  padding-top: var(--size-700);
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-nav-toggle {
   display: none;
+}
+
+.nav-list {
+  font-size: var(--fs-nav);
+}
+
+.nav-list {
+  display: flex;
+  gap: var(--size-400);
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  font-weight: var(--fw-semi-bold);
+}
+
+.nav-list a:hover,
+.nav-list a:focus {
+  color: var(--clr-accent-400);
+}
+
+/* cta */
+
+.cta {
+  position: relative;
+  /* below style brings background set in "::before" to front
+  of it's original background property set by other class on same element */
+  /* in short it creates new stacking context */
+  isolation: isolate;
+  text-align: center;
+}
+
+@media (min-width: 50em) {
+  .cta {
+    text-align: left;
+  }
+}
+
+.cta ::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: url("images/bg-tablet-pattern.svg"),
+    url("images/bg-tablet-pattern.svg");
+  background-position: -20rem -0.5rem, 80rem -45rem;
+  background-repeat: no-repeat;
+  opacity: 0.02;
+}
+
+@media (max-width: 50em) {
+  .primary-navigation {
+    display: none;
+    position: fixed;
+    inset: 7rem var(--size-400) auto;
+    background: var(--clr-neutral-100);
+    border-radius: var(--size-100);
+    padding: var(--size-600);
+    box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.19);
+  }
+
+  .display-small-none {
+    display: none;
+  }
+
+  .primary-header[data-overlay]::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    /* height: 45vh; */
+    background: linear-gradient(rgb(0 0 0 / 0), rgb(0 0 0 /0.8));
+  }
+
+  .primary-navigation[data-visible] {
+    display: block;
+  }
+
+  .nav-list {
+    display: grid;
+    gap: var(--size-500);
+    place-items: center;
+    font-weight: var(--fw-bold);
+  }
+
+  .mobile-nav-toggle {
+    display: block;
+    position: fixed;
+    top: var(--size-600);
+    right: var(--size-400);
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+    padding: 0.5em;
+  }
+
+  .icon-close {
+    display: none;
+  }
 }
